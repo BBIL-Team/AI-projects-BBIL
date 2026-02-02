@@ -407,9 +407,9 @@ export default function Landing() {
         </div>
 
         {/* ✅ TOP GRID: Project Tracking gets ~2/3 width */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           {/* Project Tracking (8/12 = 2/3) */}
-          <Card className="p-6 w-full xl:col-span-8">
+          <Card className="p-6 w-full lg:w-2/3 w-full min-w-0">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
               <div>
                 <div className="text-xl font-semibold text-slate-900">Project Tracking</div>
@@ -462,7 +462,7 @@ export default function Landing() {
             </div>
 
             {/* Timeline header ticks */}
-            <div className="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden min-w-0">
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden">
               <div className="overflow-x-auto">
                 <div className="min-w-[900px]">
               <div className="grid grid-cols-12 gap-0 border-b border-slate-200 bg-slate-50">
@@ -630,7 +630,7 @@ export default function Landing() {
           </Card>
 
           {/* Right panel (4/12) */}
-          <div className="w-full xl:col-span-4 space-y-4">
+          <div className="w-full lg:w-1/3 min-w-0 space-y-4">
             <Card className="p-5">
               <div className="flex items-start justify-between">
                 <div>
@@ -803,4 +803,6 @@ export default function Landing() {
     </div>
   );
 }
+
+
 
