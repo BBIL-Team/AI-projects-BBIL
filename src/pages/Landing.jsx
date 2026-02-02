@@ -365,15 +365,7 @@ export default function Landing() {
   return (
     <div className="min-h-full bg-gradient-to-b from-slate-50 to-white">
       <TopBar />
-
-      {/* ✅ Build check banner (remove later) */}
-      <div className="max-w-7xl mx-auto px-4 pt-3">
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 text-rose-700 px-4 py-2 text-sm font-semibold">
-          {"BUILD_CHECK_2026-02-02_IST"}
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-7 space-y-5">
+<div className="max-w-7xl mx-auto px-4 py-7 space-y-5">
         {/* HERO */}
         <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-blue-500/10 blur-2xl" />
