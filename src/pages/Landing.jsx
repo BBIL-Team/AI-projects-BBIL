@@ -464,6 +464,8 @@ export default function Landing() {
 
             {/* Timeline header ticks */}
             <div className="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden">
+              <div className="overflow-x-auto">
+                <div className="min-w-[900px]">
               <div className="grid grid-cols-12 gap-0 border-b border-slate-200 bg-slate-50">
                 <div className="col-span-4 px-4 py-3 text-xs font-semibold text-slate-600">
                   PROJECT
@@ -623,6 +625,9 @@ export default function Landing() {
             <div className="mt-3 text-xs text-slate-500">
               Tip: This timeline auto-scales based on the earliest start and latest end in your data.
             </div>
+          </div>
+        </div>
+
           </Card>
 
           {/* Right panel (4/12) */}
@@ -799,5 +804,6 @@ export default function Landing() {
     </div>
   );
 }
+
 
 
