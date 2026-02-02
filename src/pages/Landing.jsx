@@ -408,7 +408,7 @@ export default function Landing() {
         </div>
 
         {/* ✅ TOP GRID: Project Tracking gets ~2/3 width */}
-        <div className="grid lg:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           {/* Project Tracking (8/12 = 2/3) */}
           <Card className="p-5 lg:col-span-8">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
@@ -799,3 +799,4 @@ export default function Landing() {
     </div>
   );
 }
+
