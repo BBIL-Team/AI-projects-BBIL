@@ -30,15 +30,57 @@ function fmt(iso) {
   }
 }
 
-function rankMeta(i) {
-  if (i === 0) return { badge: "🏆 Leader", tone: "from-emerald-600/15 to-slate-900/0", line: "Hold the lead — close pending approvals." };
-  if (i === 1) return { badge: "🥈 Chasing", tone: "from-blue-600/15 to-slate-900/0", line: "One big delivery can flip the table." };
-  return { badge: "🔥 Comeback", tone: "from-rose-600/15 to-slate-900/0", line: "Unblock + clear overdue to climb fast." };
+// ✅ Force the narrative by head name (not by rank)
+function rankMetaByHead(head) {
+  const h = String(head || "").toLowerCase();
+
+  if (h === "badri") {
+    return {
+      badge: "🏆 Leader",
+      tone: "from-emerald-600/15 to-slate-900/0",
+      line: "Set the pace — close pending approvals fast.",
+    };
+  }
+
+  if (h === "avisek") {
+    return {
+      badge: "🥈 Chasing",
+      tone: "from-blue-600/15 to-slate-900/0",
+      line: "Strong finishes win — unblock and deliver today.",
+    };
+  }
+
+  // Shourya (neutral)
+  return {
+    badge: "📌 Focus",
+    tone: "from-slate-600/10 to-slate-900/0",
+    line: "Pick 1–2 items, finish clean, reduce overdue.",
+  };
+}
+
+function normalizeName(x) {
+  return String(x || "").trim().toLowerCase();
+}
+
+function reorderForScoreboard(stats) {
+  // ✅ Pin visual order for cards only (narrative)
+  const wanted = ["badri", "avisek", "shourya"];
+  const map = new Map(stats.map((s) => [normalizeName(s.head), s]));
+  const pinned = wanted.map((k) => map.get(k)).filter(Boolean);
+
+  // Anything else goes after
+  const rest = stats.filter((s) => !wanted.includes(normalizeName(s.head)));
+  return [...pinned, ...rest];
 }
 
 export default function Landing() {
   const projects = lsGet(PROJECTS_KEY, []);
+
+  // Real ranking for tables etc.
   const stats = useMemo(() => computeStats(projects), [projects]);
+
+  // Pinned order for the big cards only
+  const statsPinned = useMemo(() => reorderForScoreboard(stats), [stats]);
 
   // Filters
   const [head, setHead] = useState("All");
@@ -92,10 +134,10 @@ export default function Landing() {
     const gap = leader.score - (stats?.[1]?.score || 0);
     if (gap <= 5) return "Very tight race today. One approval can change the leader.";
     if (gap <= 25) return "Leader is ahead — but still catchable by end of day.";
-    return "Leader is dominating — comeback play = unblock + clear overdue.";
+    return "Leader is ahead — close approvals and unblock to catch up.";
   }, [stats]);
 
-  // Small “KPI strip”
+  // KPI strip
   const kpis = useMemo(() => {
     const total = projects.length;
     const done = projects.filter((p) => p.status === "Done").length;
@@ -119,13 +161,17 @@ export default function Landing() {
       <TopBar />
 
       <div className="max-w-6xl mx-auto px-4 py-7 space-y-5">
-        {/* HERO (premium) */}
+        {/* HERO */}
         <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="px-6 py-5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <div className="text-xs uppercase tracking-wider opacity-80">AI Heads Command Centre</div>
-                <div className="text-2xl font-semibold mt-1">Ship fast. Clear approvals. Win the week.</div>
+                <div className="text-xs uppercase tracking-wider opacity-80">
+                  AI Heads Command Centre
+                </div>
+                <div className="text-2xl font-semibold mt-1">
+                  Ship fast. Clear approvals. Stay ahead.
+                </div>
                 <div className="text-sm opacity-85 mt-2">{topLine}</div>
               </div>
               <div className="flex gap-2 flex-wrap justify-start md:justify-end">
@@ -135,6 +181,7 @@ export default function Landing() {
                 <Chip>Agilisium</Chip>
                 <Chip>Medhastra</Chip>
                 <Chip>Darsa</Chip>
+                <Chip>Vendor 4</Chip>
               </div>
             </div>
           </div>
@@ -168,39 +215,49 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* SCOREBOARD (premium cards with subtle tone) */}
+        {/* SCOREBOARD (Pinned narrative order) */}
         <div className="grid lg:grid-cols-3 gap-4">
-          {stats.map((h, i) => {
-            const meta = rankMeta(i);
+          {statsPinned.map((h) => {
+            const meta = rankMetaByHead(h.head);
             return (
               <Card key={h.head} className="p-0 overflow-hidden">
                 <div className={`px-5 py-4 bg-gradient-to-br ${meta.tone}`}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-lg font-semibold text-slate-900">{h.head}</div>
-                      <div className="text-sm text-slate-600 mt-0.5">{meta.line}</div>
+                      <div className="text-lg font-semibold text-slate-900">
+                        {h.head}
+                      </div>
+                      <div className="text-sm text-slate-600 mt-0.5">
+                        {meta.line}
+                      </div>
                     </div>
                     <Chip>{meta.badge}</Chip>
                   </div>
 
                   <div className="mt-4 flex items-end gap-2">
-                    <div className="text-4xl font-semibold text-slate-900">{h.score}</div>
+                    <div className="text-4xl font-semibold text-slate-900">
+                      {h.score}
+                    </div>
                     <div className="text-sm text-slate-500 pb-1">points</div>
                   </div>
                 </div>
 
                 <div className="px-5 py-4 grid grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center justify-between rounded-xl bg-white border border-slate-200 px-3 py-2">
-                    <span>✅ Done</span><span className="font-semibold">{h.done}</span>
+                    <span>✅ Done</span>
+                    <span className="font-semibold">{h.done}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-white border border-slate-200 px-3 py-2">
-                    <span>⛔ Blocked</span><span className="font-semibold">{h.blocked}</span>
+                    <span>⛔ Blocked</span>
+                    <span className="font-semibold">{h.blocked}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-white border border-slate-200 px-3 py-2">
-                    <span>⏳ Pending</span><span className="font-semibold">{h.pendingApprovals}</span>
+                    <span>⏳ Pending</span>
+                    <span className="font-semibold">{h.pendingApprovals}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-white border border-slate-200 px-3 py-2">
-                    <span>🔥 Overdue</span><span className="font-semibold">{h.overdueApprovals}</span>
+                    <span>🔥 Overdue</span>
+                    <span className="font-semibold">{h.overdueApprovals}</span>
                   </div>
                 </div>
               </Card>
@@ -208,14 +265,18 @@ export default function Landing() {
           })}
         </div>
 
-        {/* MAIN GRID: Project Tracking (big) + Vendor Snapshot (compact) */}
+        {/* MAIN GRID: Project Tracking (big) + Vendor Snapshot */}
         <div className="grid lg:grid-cols-3 gap-4">
           {/* Project Tracking */}
           <Card className="p-5 lg:col-span-2">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
-                <div className="text-lg font-semibold text-slate-900">Project Tracking</div>
-                <div className="text-sm text-slate-600">Filters are sticky and fast — use them to compare.</div>
+                <div className="text-lg font-semibold text-slate-900">
+                  Project Tracking
+                </div>
+                <div className="text-sm text-slate-600">
+                  Compare workload and bottlenecks quickly.
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 w-full md:w-auto">
@@ -226,7 +287,9 @@ export default function Landing() {
                 >
                   <option value="All">All Heads</option>
                   {AI_HEADS.map((h) => (
-                    <option key={h} value={h}>{h}</option>
+                    <option key={h} value={h}>
+                      {h}
+                    </option>
                   ))}
                 </select>
 
@@ -237,7 +300,9 @@ export default function Landing() {
                 >
                   <option value="All">All Vendors</option>
                   {VENDORS.map((v) => (
-                    <option key={v} value={v}>{v}</option>
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
                   ))}
                 </select>
 
@@ -248,7 +313,9 @@ export default function Landing() {
                 >
                   <option value="All">All Status</option>
                   {["Not Started", "In Progress", "Blocked", "Done"].map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
                   ))}
                 </select>
 
@@ -284,18 +351,28 @@ export default function Landing() {
                       <tr key={p.id} className="border-t border-slate-100 hover:bg-slate-50/60">
                         <td className="py-3 px-3">
                           <div className="font-medium text-slate-900">{p.title}</div>
-                          <div className="text-xs text-slate-500">{fmt(p.startDate)} → {fmt(p.targetDate)}</div>
-                        </td>
-                        <td className="py-3 px-3"><Chip>{p.vendor}</Chip></td>
-                        <td className="py-3 px-3">
-                          <div className="flex flex-wrap gap-1">
-                            {(p.aiHeads || []).map((h) => <Chip key={h}>{h}</Chip>)}
+                          <div className="text-xs text-slate-500">
+                            {fmt(p.startDate)} → {fmt(p.targetDate)}
                           </div>
                         </td>
-                        <td className="py-3 px-3"><StatusBadge status={p.status} /></td>
+                        <td className="py-3 px-3">
+                          <Chip>{p.vendor}</Chip>
+                        </td>
+                        <td className="py-3 px-3">
+                          <div className="flex flex-wrap gap-1">
+                            {(p.aiHeads || []).map((h) => (
+                              <Chip key={h}>{h}</Chip>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <StatusBadge status={p.status} />
+                        </td>
                         <td className="py-3 px-3 min-w-[200px]">
                           <ProgressBar value={p.progress} />
-                          <div className="text-xs text-slate-600 mt-1">{p.progress}%</div>
+                          <div className="text-xs text-slate-600 mt-1">
+                            {p.progress}%
+                          </div>
                         </td>
                         <td className={`py-3 px-3 ${overdueTarget ? "text-rose-700 font-semibold" : "text-slate-700"}`}>
                           {fmt(p.targetDate)}
@@ -311,16 +388,22 @@ export default function Landing() {
             </div>
 
             {filtered.length === 0 && (
-              <div className="text-sm text-slate-500 mt-4">No projects match the filters.</div>
+              <div className="text-sm text-slate-500 mt-4">
+                No projects match the filters.
+              </div>
             )}
           </Card>
 
-          {/* Vendor Snapshot (compact, premium) */}
+          {/* Vendor Snapshot */}
           <Card className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="text-lg font-semibold text-slate-900">Vendor Snapshot</div>
-                <div className="text-sm text-slate-600">Quick risk + delivery view.</div>
+                <div className="text-lg font-semibold text-slate-900">
+                  Vendor Snapshot
+                </div>
+                <div className="text-sm text-slate-600">
+                  Quick risk + delivery view.
+                </div>
               </div>
               <Chip>Live</Chip>
             </div>
@@ -341,11 +424,15 @@ export default function Landing() {
                     <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                       <div className={`rounded-xl border px-3 py-2 bg-white ${blockedN > 0 ? "border-rose-200" : "border-slate-200"}`}>
                         <div className="text-xs text-slate-500">Blocked</div>
-                        <div className={`text-lg font-semibold ${blockedN > 0 ? "text-rose-700" : "text-slate-900"}`}>{blockedN}</div>
+                        <div className={`text-lg font-semibold ${blockedN > 0 ? "text-rose-700" : "text-slate-900"}`}>
+                          {blockedN}
+                        </div>
                       </div>
                       <div className={`rounded-xl border px-3 py-2 bg-white ${doneN > 0 ? "border-emerald-200" : "border-slate-200"}`}>
                         <div className="text-xs text-slate-500">Done</div>
-                        <div className={`text-lg font-semibold ${doneN > 0 ? "text-emerald-700" : "text-slate-900"}`}>{doneN}</div>
+                        <div className={`text-lg font-semibold ${doneN > 0 ? "text-emerald-700" : "text-slate-900"}`}>
+                          {doneN}
+                        </div>
                       </div>
                     </div>
 
@@ -359,13 +446,17 @@ export default function Landing() {
           </Card>
         </div>
 
-        {/* Leaderboard + Action panels */}
+        {/* Leaderboard (true ranking by score) + Focus */}
         <div className="grid lg:grid-cols-3 gap-4">
           <Card className="p-5 lg:col-span-2">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-lg font-semibold text-slate-900">Leaderboard</div>
-                <div className="text-sm text-slate-600">Score is driven by done + speed − approvals − overdue.</div>
+                <div className="text-lg font-semibold text-slate-900">
+                  Leaderboard
+                </div>
+                <div className="text-sm text-slate-600">
+                  Scores reflect delivery + speed − approvals − overdue.
+                </div>
               </div>
               <div className="text-xs text-slate-500">v1</div>
             </div>
@@ -389,7 +480,7 @@ export default function Landing() {
                       <td className="py-3 px-3">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-900">{h.head}</span>
-                          <Chip>{rankMeta(i).badge}</Chip>
+                          <Chip>{rankMetaByHead(h.head).badge}</Chip>
                         </div>
                       </td>
                       <td className="py-3 px-3 font-semibold">{h.score}</td>
@@ -405,7 +496,9 @@ export default function Landing() {
 
           <Card className="p-5">
             <div className="text-lg font-semibold text-slate-900">Today’s Focus</div>
-            <div className="text-sm text-slate-600 mt-1">Clear overdue approvals first. They destroy points.</div>
+            <div className="text-sm text-slate-600 mt-1">
+              Clear overdue approvals first. They destroy points.
+            </div>
 
             <div className="mt-4">
               <div className="text-sm font-medium text-slate-900">Overdue approvals</div>
@@ -422,7 +515,9 @@ export default function Landing() {
                         <span className="text-rose-700 font-medium">Due: {fmt(a.dueDate)}</span>
                       </div>
                       <div className="flex gap-1 mt-2 flex-wrap">
-                        {(a.aiHeads || []).map((h) => <Chip key={h}>{h}</Chip>)}
+                        {(a.aiHeads || []).map((h) => (
+                          <Chip key={h}>{h}</Chip>
+                        ))}
                       </div>
                     </div>
                   ))
@@ -453,7 +548,9 @@ export default function Landing() {
                         </div>
                       </div>
                       <div className="flex gap-1 mt-2 flex-wrap">
-                        {(p.aiHeads || []).map((h) => <Chip key={h}>{h}</Chip>)}
+                        {(p.aiHeads || []).map((h) => (
+                          <Chip key={h}>{h}</Chip>
+                        ))}
                       </div>
                     </div>
                   ))
@@ -466,7 +563,9 @@ export default function Landing() {
         {/* Gantt */}
         <Card className="p-5">
           <div className="text-lg font-semibold text-slate-900">Timeline</div>
-          <div className="text-sm text-slate-600 mt-1">A single glance view of delivery dates and overlap.</div>
+          <div className="text-sm text-slate-600 mt-1">
+            A single glance view of delivery dates and overlap.
+          </div>
           <div className="mt-4">
             <GanttChart projects={projects} />
           </div>
