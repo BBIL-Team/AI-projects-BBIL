@@ -410,7 +410,7 @@ export default function Landing() {
         {/* ✅ TOP GRID: Project Tracking gets ~2/3 width */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           {/* Project Tracking (8/12 = 2/3) */}
-          <Card className="p-5 lg:col-span-8">
+          <Card className="p-5 w-full xl:col-span-8">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
               <div>
                 <div className="text-xl font-semibold text-slate-900">Project Tracking</div>
@@ -626,7 +626,7 @@ export default function Landing() {
           </Card>
 
           {/* Right panel (4/12) */}
-          <div className="lg:col-span-4 space-y-4">
+          <div className="w-full xl:col-span-4 space-y-4">
             <Card className="p-5">
               <div className="flex items-start justify-between">
                 <div>
@@ -799,4 +799,5 @@ export default function Landing() {
     </div>
   );
 }
+
 
