@@ -409,7 +409,7 @@ export default function Landing() {
         {/* ✅ TOP GRID: Project Tracking gets ~2/3 width */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Project Tracking (8/12 = 2/3) */}
-          <Card className="p-6 w-full lg:col-span-8">
+          <Card className="p-6 w-full xl:col-span-8">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
               <div>
                 <div className="text-xl font-semibold text-slate-900">Project Tracking</div>
@@ -462,7 +462,7 @@ export default function Landing() {
             </div>
 
             {/* Timeline header ticks */}
-            <div className="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-white overflow-hidden min-w-0">
               <div className="overflow-x-auto">
                 <div className="min-w-[900px]">
               <div className="grid grid-cols-12 gap-0 border-b border-slate-200 bg-slate-50">
@@ -504,7 +504,7 @@ export default function Landing() {
                   return (
                     <div key={p.id} className="grid grid-cols-12 gap-0 items-stretch bg-white">
                       {/* Left info */}
-                      <div className="col-span-4 px-6 py-7">
+                      <div className="col-span-4 px-5 py-6">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
@@ -585,7 +585,7 @@ export default function Landing() {
                             style={{ left: `calc(${progPct}% - 6px)` }}
                             title={`Progress: ${prog}%`}
                           >
-                            <div className="h-5 w-5 rounded-full bg-white border-2 border-slate-900 shadow-sm" />
+                            <div className="h-4 w-4 rounded-full bg-white border-2 border-slate-900 shadow-sm" />
                           </div>
 
                           {/* end marker */}
@@ -594,7 +594,7 @@ export default function Landing() {
                             style={{ left: `calc(${endPct}% - 7px)` }}
                             title={`End: ${p.targetDate || "—"}`}
                           >
-                            <div className={`h-5 w-5 rounded-full border-2 ${p.status === "Done" ? "bg-emerald-500 border-emerald-700" : "bg-white border-slate-700"}`} />
+                            <div className={`h-4 w-4 rounded-full border-2 ${p.status === "Done" ? "bg-emerald-500 border-emerald-700" : "bg-white border-slate-700"}`} />
                           </div>
 
                           {/* right side % label */}
@@ -630,7 +630,7 @@ export default function Landing() {
           </Card>
 
           {/* Right panel (4/12) */}
-          <div className="w-full lg:col-span-4 space-y-4">
+          <div className="w-full xl:col-span-4 space-y-4">
             <Card className="p-5">
               <div className="flex items-start justify-between">
                 <div>
@@ -803,6 +803,4 @@ export default function Landing() {
     </div>
   );
 }
-
-
 
