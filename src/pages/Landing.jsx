@@ -366,6 +366,13 @@ export default function Landing() {
     <div className="min-h-full bg-gradient-to-b from-slate-50 to-white">
       <TopBar />
 
+      {/* ✅ Build check banner (remove later) */}
+      <div className="max-w-7xl mx-auto px-4 pt-3">
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 text-rose-700 px-4 py-2 text-sm font-semibold">
+          {"BUILD_CHECK_2026-02-02_IST"}
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 py-7 space-y-5">
         {/* HERO */}
         <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -410,7 +417,7 @@ export default function Landing() {
         {/* ✅ TOP GRID: Project Tracking gets ~2/3 width */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           {/* Project Tracking (8/12 = 2/3) */}
-          <Card className="p-5 w-full xl:col-span-8">
+          <Card className="p-6 w-full xl:col-span-8">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
               <div>
                 <div className="text-xl font-semibold text-slate-900">Project Tracking</div>
@@ -544,7 +551,7 @@ export default function Landing() {
 
                       {/* Timeline */}
                       <div className="col-span-8 px-4 py-6">
-                        <div className="relative h-16 rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
+                        <div className="relative h-20 rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
                           {/* vertical grid lines (12 columns feel) */}
                           <div className="absolute inset-0 grid grid-cols-12">
                             {Array.from({ length: 12 }).map((_, i) => (
