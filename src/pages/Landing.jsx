@@ -372,7 +372,7 @@ export default function Landing() {
           <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-emerald-500/10 blur-2xl" />
 
           <div className="relative px-6 py-6">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="inline-flex items-center gap-2 text-xs text-slate-600">
                   <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -803,6 +803,7 @@ export default function Landing() {
     </div>
   );
 }
+
 
 
 
